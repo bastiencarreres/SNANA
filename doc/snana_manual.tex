@@ -1476,7 +1476,7 @@ etc ...
   USE_SIMLIB_DISTANCE: 1  # use lumi-distance in header (invert to get zCMB)
   USE_SIMLIB_TAKE_SPECTRUM: 1  # use TAKE_SPECTRUM keys in header 
   USE_SIMLIB_SPECTROGRAPH:  1  # use SPECTROGRAPH keys under each LIBID
-  USE_SIMLIB_SALT2:         1  # use SALT2c & SALT2x1 keys in header
+  USE_SIMLIB_SALT2:         1  # use SALT2c, SALT2x1 & SALT2x0 keys in header
   USE_SIMLIB_GROUPID:       1  # pick HOST with RA,DEC near SIMLIB RA,DEC
   USE_SIMLIB_IDEXPT:        1  # write IDEXPT value to IMGNUM column in data file
   USE_SIMLIB_IMGNUM:        1  # same as above 
@@ -1633,6 +1633,8 @@ in a \simlib\ file.
 
    GENRANGE_SALT2c:   xxx xxx # regenerate SALT2c in this range
    GENSIGMA_SALT2c:   xxx     # pick from Gaussian profile; otherwise flat
+
+   SALT2x0:           xxx     # force SALT2 x0 (ignore mu, alpha, beta)
 
 #    correlated template noise
    TEMPLATE_ZPT:    <value for each filter>   # ADU     

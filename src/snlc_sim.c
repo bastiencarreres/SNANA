@@ -13109,9 +13109,7 @@ void override_modelPar_from_SNHOST(void) {
       modelPar_from_SNHOST(b, GENLC.COLORPAR2_NAME);    
 
     // re-compute x0 and mB since x1,c have changed (Jun 15 2016)
-    GENLC.SALT2x0 = SALT2x0calc(GENLC.SALT2alpha, GENLC.SALT2beta, 
-				GENLC.SALT2x1, GENLC.SALT2c, 
-				GENLC.DLMU );   
+    GENLC.SALT2x0 = get_SALT2x0_sim();
     GENLC.SALT2mB = SALT2mBcalc(GENLC.SALT2x0) ;
 
     // May 23 2019: adjust amplitude for SNMAGSHIFT_HOSTCOR
@@ -14044,6 +14042,19 @@ void gen_modelPar(int ilc, int OPT_FRAME ) {
 
 
 //***************************************
+double get_SALT2x0_sim(void) {
+
+  // Oct 2026: return x0 from SIMLIB header (SALT2x0 key, requires
+  // USE_SIMLIB_SALT2) if given; otherwise compute from mu,x1,c,alpha,beta.
+
+  if ( SIMLIB_HEADER.SALT2x0 > 0.0 ) { return SIMLIB_HEADER.SALT2x0 ; }
+
+  return SALT2x0calc(GENLC.SALT2alpha, GENLC.SALT2beta, 
+		     GENLC.SALT2x1, GENLC.SALT2c, GENLC.DLMU );
+
+} // end get_SALT2x0_sim
+
+//***************************************
 void  gen_modelPar_SALT2(int OPT_FRAME) {
 
   // Created Feb 26 2018
@@ -14105,9 +14116,7 @@ void  gen_modelPar_SALT2(int OPT_FRAME) {
 
   if ( ISFRAME_OBS ) {
     // now compute x0 parameter from MU and the alpha,beta params.
-    GENLC.SALT2x0 = SALT2x0calc(GENLC.SALT2alpha, GENLC.SALT2beta, 
-				GENLC.SALT2x1, GENLC.SALT2c, GENLC.DLMU );
-    
+    GENLC.SALT2x0 = get_SALT2x0_sim();
     GENLC.SALT2mB = SALT2mBcalc(GENLC.SALT2x0);
 
     /*
@@ -21930,6 +21939,7 @@ void init_SIMLIB_HEADER(void) {
   init_GENGAUSS_ASYM( &SIMLIB_HEADER.GENGAUSS_PEAKMJD, (double)999. ) ;
   init_GENGAUSS_ASYM( &SIMLIB_HEADER.GENGAUSS_SALT2x1, (double)999. ) ;
   init_GENGAUSS_ASYM( &SIMLIB_HEADER.GENGAUSS_SALT2c,  (double)999. ) ;  
+  SIMLIB_HEADER.SALT2x0 = -9.0 ;
 
   sprintf(SIMLIB_HEADER.FIELD,"%s", SIMLIB_GLOBAL_HEADER.FIELD);
 
@@ -22277,6 +22287,11 @@ void parse_SIMLIB_GENRANGES(char **WDLIST ) {
       SIMLIB_HEADER.GENGAUSS_SALT2x1.SIGMA[0] = TMPVAL ;
       SIMLIB_HEADER.GENGAUSS_SALT2x1.SIGMA[1] = TMPVAL ;
     } 
+
+    // Oct 2026: optional fixed x0 (overrides x0 computed from mu,x1,c)
+    if ( strcmp(KEY,"SALT2x0:")==0 ) {
+      sscanf(WDLIST[1], "%le", &SIMLIB_HEADER.SALT2x0 ) ;
+    }
   }  // end RDFLAG_SALT2
 
 

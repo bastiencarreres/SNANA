@@ -570,7 +570,7 @@ struct INPUTS {
   int  USE_SIMLIB_MAGOBS ;    // use MAGOBS column instead of SN model
   int  USE_SIMLIB_TAKE_SPECTRUM;  // use TAKE_SPECTRUM keys in SIMLIB header
   int  USE_SIMLIB_SPECTROGRAPH;  // use SPECTROGRAPH keys in SIMLIB entries (May 30 2025)
-  int  USE_SIMLIB_SALT2 ;     // use SALT2c and SALT2x1 from SIMLIB header
+  int  USE_SIMLIB_SALT2 ;     // use SALT2c, SALT2x1, SALT2x0 from SIMLIB header
   int  USE_SIMLIB_GROUPID;    // use GROUPID from SIMLIB header
   int  USE_SIMLIB_IDEXPT;     // write this value to PHOT file column IMGNUM
   int  USE_SIMLIB_GALID;      // GALID [ROWNUM] in SIMLIB header is used to select from HOSTLIB
@@ -1650,6 +1650,7 @@ struct SIMLIB_HEADER {
   GENGAUSS_ASYM_DEF GENGAUSS_PEAKMJD ;
   GENGAUSS_ASYM_DEF GENGAUSS_SALT2x1 ;
   GENGAUSS_ASYM_DEF GENGAUSS_SALT2c ;
+  double SALT2x0 ;  // optional fixed x0 (<0 => compute from mu,x1,c)
   double GENRANGE_REDSHIFT[2] ;
   double CUTWIN_REDSHIFT[2] ;
 
@@ -2076,6 +2077,7 @@ void   apply_RA_convention(double*RA);
 void   gen_filtmap(int ilc);  // generate filter-maps
 void   gen_modelPar(int ilc, int OPT_FRAME);
 void   gen_modelPar_SALT2(int OPT_FRAME);
+double get_SALT2x0_sim(void);
 void   gen_modelPar_SIMSED(int OPT_FRAME);
 double pick_gridval_SIMSED(int ipar, int ipar_model);
 void   gen_modelPar_dust(int OPT_FRAME);
